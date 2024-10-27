@@ -105,6 +105,9 @@ window.addEventListener("resize", () => {
     mesh1.position.x = 0;
     mesh2.position.x = 0;
     mesh3.position.x = 0;
+    mesh1.scale.set(0.7, 0.7, 0.7);
+    mesh2.scale.set(0.7, 0.7, 0.7);
+    mesh3.scale.set(0.7, 0.7, 0.7);
   } else {
     mesh1.position.x = -2;
     mesh2.position.x = 2;
