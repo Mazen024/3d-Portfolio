@@ -1,4 +1,3 @@
-// Import necessary modules
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
@@ -189,9 +188,19 @@ const tick = () => {
 };
 tick();
 
-document.getElementById("openPortfolioBtn").addEventListener("click", () => {
-  document.querySelector(".webgl1").style.display = "none";
+const backButton = document.querySelector(".placeholder-button");
+const openPortfolioBtn = document.getElementById("openPortfolioBtn");
+
+openPortfolioBtn.addEventListener("click", () => {
   document.querySelector(".intro").style.display = "none";
-  document.querySelector(".webgl").style.display = "block"; // Show the portfolio canvas
-  document.getElementById("portfolioContent").style.display = "block"; // Show portfolio content
+  document.getElementById("portfolioContent").style.display = "block";
+  document.querySelector(".webgl1").style.display = "none";
+  document.querySelector(".webgl").style.display = "block";
+});
+
+backButton.addEventListener("click", () => {
+  document.getElementById("portfolioContent").style.display = "none";
+  document.querySelector(".intro").style.display = "flex";
+  document.querySelector(".webgl1").style.display = "block";
+  document.querySelector(".webgl").style.display = "none";
 });

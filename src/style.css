@@ -12,35 +12,32 @@ html {
   height: 100%;
 }
 
-/* WebGL Canvas for Intro */
 canvas.webgl1 {
-  position: fixed; /* Fixed to cover the intro section */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1; /* Behind the intro content */
+  z-index: -1;
 }
 
-/* WebGL Canvas for Portfolio */
 canvas.webgl {
-  position: fixed; /* Fixed to cover the entire viewport */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1; /* Behind the portfolio content */
-  display: none; /* Hidden initially */
+  z-index: -1;
+  display: none;
 }
 
-/* Intro Section */
 .intro {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Full height for intro */
+  height: 100vh;
   text-align: center;
   padding: 20px;
   font-family: "Cabin", sans-serif;
@@ -74,13 +71,12 @@ canvas.webgl {
   background-color: #0056b3;
 }
 
-/* Portfolio Sections */
 .section {
-  position: relative; /* Keep position relative for the section */
-  display: flex; /* Use flexbox for layout */
-  align-items: center; /* Center items vertically */
-  justify-content: center; /* Center items horizontally */
-  height: 100vh; /* Full height for each section */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
   font-family: "VT323", monospace;
   color: #ffffff;
   text-transform: uppercase;
@@ -95,7 +91,26 @@ canvas.webgl {
   height: auto;
 }
 
-/* Responsive Design */
+.placeholder-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: brown;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 1000;
+}
+
+.placeholder-button:hover {
+  background-color: darkred;
+}
+
 @media only screen and (max-width: 600px) {
   img {
     display: none;
