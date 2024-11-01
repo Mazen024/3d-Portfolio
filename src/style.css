@@ -12,24 +12,35 @@ html {
   height: 100%;
 }
 
-.webgl {
-  position: fixed;
+/* WebGL Canvas for Intro */
+canvas.webgl1 {
+  position: fixed; /* Fixed to cover the intro section */
   top: 0;
   left: 0;
-  outline: none;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: -1; /* Behind the intro content */
+}
+
+/* WebGL Canvas for Portfolio */
+canvas.webgl {
+  position: fixed; /* Fixed to cover the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Behind the portfolio content */
+  display: none; /* Hidden initially */
 }
 
 /* Intro Section */
 .intro {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #f0f4f8;
+  height: 100vh; /* Full height for intro */
   text-align: center;
   padding: 20px;
   font-family: "Cabin", sans-serif;
@@ -65,13 +76,13 @@ html {
 
 /* Portfolio Sections */
 .section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  position: relative;
+  position: relative; /* Keep position relative for the section */
+  display: flex; /* Use flexbox for layout */
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  height: 100vh; /* Full height for each section */
   font-family: "VT323", monospace;
-  color: #000000;
+  color: #ffffff;
   text-transform: uppercase;
   font-size: 7vmin;
   padding-left: 10%;
@@ -83,11 +94,6 @@ html {
   max-width: 200px;
   height: auto;
 }
-
-/* Uncomment to alternate alignment between sections */
-/* section:nth-child(odd) {
-  justify-content: flex-end;
-} */
 
 /* Responsive Design */
 @media only screen and (max-width: 600px) {

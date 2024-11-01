@@ -86,6 +86,9 @@ const directionalLight = new THREE.DirectionalLight("#ffffff", 1);
 directionalLight.position.set(1, 1, 0);
 scene.add(directionalLight);
 
+const ambientLight = new THREE.AmbientLight("#ffffff", 0.1);
+scene.add(ambientLight);
+
 const cameraGroup = new THREE.Group();
 scene.add(cameraGroup);
 const camera = new THREE.PerspectiveCamera(
@@ -100,7 +103,6 @@ cameraGroup.add(camera);
 window.addEventListener("resize", () => {
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
-  console.log(sizes.width);
   if (sizes.width < 600) {
     mesh1.position.x = 0;
     mesh2.position.x = 0;
