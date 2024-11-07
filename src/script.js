@@ -1,195 +1,188 @@
 import * as THREE from "three";
-import gsap from "gsap";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-const textureLoader = new THREE.TextureLoader();
-// Water
-const watercolor = textureLoader.load("Textures/Water/WaterCOLOR.jpg");
-const waterDisp = textureLoader.load("Textures/Water/WaterDISP.png");
-const waterNormal = textureLoader.load("Textures/Water/WaterNORM.jpg");
-const waterOcc = textureLoader.load("Textures/Water/WaterOCC.jpg");
-const waterSpec = textureLoader.load("Textures/Water/WaterSPEC.jpg");
-
-// Stone
-const stoneColor = textureLoader.load("Textures/Stone/Stone_Floorcolor.jpg");
-const stoneOcc = textureLoader.load("Textures/Stone/Stone_FloorambientOcc.jpg");
-const stoneHeight = textureLoader.load("Textures/Stone/Stone_Floorheight.png");
-const stoneNormal = textureLoader.load("Textures/Stone/Stone_Floornormal.jpg");
-const stoneRoughness = textureLoader.load("Textures/Stone/Stone_Floorough.jpg");
-
-// Lava
-const lavaColor = textureLoader.load("Textures/Lava/LavaCOLOR.jpg");
-const lavaDisp = textureLoader.load("Textures/Lava/LavaDISP.png");
-const lavaMask = textureLoader.load("Textures/Lava/LavaMASK.jpg");
-const lavaNormal = textureLoader.load("Textures/Lava/LavaNORM.jpg");
-const lavaOcc = textureLoader.load("Textures/Lava/LavaOCC.jpg");
-const lavaRoughness = textureLoader.load("Textures/Lava/LavaROUGH.jpg");
-
+const solarSystem = new THREE.Object3D();
 const scene = new THREE.Scene();
-const canvas = document.querySelector("canvas.webgl");
+const canvas = document.querySelector(".webgl");
+
+import px from "../static/360_Degree_Images/px.png";
+import nx from "../static/360_Degree_Images/nx.png";
+import py from "../static/360_Degree_Images/py.png";
+import ny from "../static/360_Degree_Images/ny.png";
+import pz from "../static/360_Degree_Images/pz.png";
+import nz from "../static/360_Degree_Images/nz.png";
+
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+const environmentMap = cubeTextureLoader.load([px, nx, py, ny, pz, nz]);
+scene.environment = environmentMap;
+scene.background = environmentMap;
 
 const sizes = {
   width: window.innerWidth,
   height: window.innerHeight,
 };
 
-const waterMaterial = new THREE.MeshPhongMaterial({
-  color: "#ffeded",
-  map: watercolor,
-  displacementScale: 0.01,
-  displacementMap: waterDisp,
-  normalMap: waterNormal,
-  aoMap: waterOcc,
-  specularMap: waterSpec,
-});
-
-const stoneMaterial = new THREE.MeshStandardMaterial({
-  color: "#ffeded",
-  map: stoneColor,
-  displacementScale: 0.01,
-  displacementMap: stoneHeight,
-  normalMap: stoneNormal,
-  aoMap: stoneOcc,
-  roughness: 0.5,
-  roughnessMap: stoneRoughness,
-});
-
-const lavaMaterial = new THREE.MeshStandardMaterial({
-  color: "#ffeded",
-  map: lavaColor,
-  displacementScale: 0.1,
-  displacementMap: lavaDisp,
-  normalMap: lavaNormal,
-  aoMap: lavaOcc,
-  roughness: 0.1,
-  roughnessMap: lavaRoughness,
-  alphaMap: lavaMask,
-});
-
-const objectsDistance = 4;
-
-const mesh1 = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), lavaMaterial);
-const mesh2 = new THREE.Mesh(new THREE.ConeGeometry(1.5, 2, 4), stoneMaterial);
-const mesh3 = new THREE.Mesh(
-  new THREE.TorusKnotGeometry(0.8, 0.35, 100, 16),
-  waterMaterial
-);
-mesh1.position.y = 0;
-mesh2.position.y = -objectsDistance;
-mesh3.position.y = -objectsDistance * 2;
-mesh1.position.x = -2;
-mesh2.position.x = 2;
-mesh3.position.x = -2;
-scene.add(mesh1, mesh2, mesh3);
-const sectionsMeshes = [mesh1, mesh2, mesh3];
-
-const directionalLight = new THREE.DirectionalLight("#ffffff", 1);
-directionalLight.position.set(1, 1, 0);
-scene.add(directionalLight);
-
-const cameraGroup = new THREE.Group();
-scene.add(cameraGroup);
 const camera = new THREE.PerspectiveCamera(
-  35,
+  75,
   sizes.width / sizes.height,
   0.1,
-  100
+  1000
 );
-camera.position.z = 6;
-cameraGroup.add(camera);
+camera.position.set(3, 7, 20);
+scene.add(camera);
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
+const textureLoader = new THREE.TextureLoader();
+const earthTexture = textureLoader.load(
+  "textures/earthdunya/textures/Image_3.png"
+);
+
+const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+const sphereMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
+const earthSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+scene.add(earthSphere);
+
+const sunLoader = new GLTFLoader().setPath("../textures/Sun/");
+let sun;
+sunLoader.load(
+  "scene.gltf",
+  function (gltf) {
+    sun = gltf.scene;
+    if (sun) {
+      sun.position.set(0, 0, 0);
+      sun.scale.set(0.1, 0.1, 0.1);
+      solarSystem.add(sun);
+    }
+  },
+  undefined,
+  function (error) {
+    console.log(error);
+  }
+);
+scene.add(solarSystem);
+
+const marsTexture = textureLoader.load("textures/mars/textures/8k_mars.jpg");
+const marsSphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+const marsSphereMaterial = new THREE.MeshStandardMaterial({ map: marsTexture });
+const marsSphere = new THREE.Mesh(marsSphereGeometry, marsSphereMaterial);
+scene.add(marsSphere);
+
+function OrbitPath(radius) {
+  const orbitPath = new THREE.Mesh(
+    new THREE.TorusGeometry(radius, 0.05, 16, 100, Math.PI * 2),
+    new THREE.MeshBasicMaterial({ color: 0xffffff })
+  );
+  orbitPath.rotation.x = Math.PI / 2;
+  scene.add(orbitPath);
+}
+OrbitPath(6);
+OrbitPath(10);
+OrbitPath(14);
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+scene.add(ambientLight);
+
+const pointLight = new THREE.PointLight(0xffffff, 2, 1000);
+pointLight.position.set(0, 0, 0);
+scene.add(pointLight);
+
+const pointLightHelper = new THREE.PointLightHelper(pointLight, 10);
+
+function createRectAreaLight(x, y, z) {
+  const rectLight = new THREE.RectAreaLight(0xffcc66, 2, 4, 6);
+  rectLight.position.set(x, y, z);
+  rectLight.lookAt(0, 0, 0);
+  scene.add(rectLight);
+  const rectLightHelper = new RectAreaLightHelper(rectLight);
+}
+
+createRectAreaLight(4.5, 0, 0);
+createRectAreaLight(-4.5, 0, 0);
+createRectAreaLight(0, 4.5, 0);
+createRectAreaLight(0, -4.5, 0);
+createRectAreaLight(0, 0, 4.5);
+createRectAreaLight(0, 0, -4.5);
+
+const radius = 14;
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+let zoomingToSun = false;
+let zoomedIn = false;
+
+const targetPosition = new THREE.Vector3(3, 3, 3);
+const defaultPosition = new THREE.Vector3(3, 7, 20);
+const sunPosition = new THREE.Vector3(0, 0, 0);
+
+function toggleZoom() {
+  zoomingToSun = true;
+  zoomedIn = !zoomedIn;
+}
+
+window.addEventListener("click", (event) => {
+  const mouse = new THREE.Vector2(
+    (event.clientX / window.innerWidth) * 2 - 1,
+    -(event.clientY / window.innerHeight) * 2 + 1
+  );
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObject(sun, true);
+
+  if (intersects.length > 0) {
+    toggleZoom();
+  }
+});
+
+const animate = () => {
+  const elapsedTime = new Date().getTime();
+
+  earthSphere.rotation.y = elapsedTime * 0.0005;
+  earthSphere.position.x = Math.cos(elapsedTime / 1000) * radius;
+  earthSphere.position.z = Math.sin(elapsedTime / 1000) * radius;
+
+  marsSphere.rotation.y = elapsedTime * 0.0005;
+  marsSphere.position.x = Math.cos(elapsedTime / 1000) * 6;
+  marsSphere.position.z = Math.sin(elapsedTime / 1000) * 6;
+
+  if (zoomingToSun) {
+    const target = zoomedIn ? targetPosition : defaultPosition;
+    camera.position.lerp(target, 0.05);
+    camera.lookAt(sunPosition);
+    controls.target.lerp(sunPosition, 0.05);
+    controls.update();
+
+    if (camera.position.distanceTo(target) < 0.1) {
+      zoomingToSun = false;
+    }
+  } else {
+    if (sun) {
+      sun.rotation.y = elapsedTime * -0.001;
+    }
+    camera.position.x = Math.sin(elapsedTime / 1000) * 6;
+    camera.position.z = Math.cos(elapsedTime / 1000) * 20;
+    camera.lookAt(scene.position);
+    controls.update();
+  }
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+};
+
+animate();
 
 window.addEventListener("resize", () => {
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
-  console.log(sizes.width);
-  if (sizes.width < 600) {
-    mesh1.position.x = 0;
-    mesh2.position.x = 0;
-    mesh3.position.x = 0;
-    mesh1.scale.set(0.7, 0.7, 0.7);
-    mesh2.scale.set(0.7, 0.7, 0.7);
-    mesh3.scale.set(0.7, 0.7, 0.7);
-  } else {
-    mesh1.position.x = -2;
-    mesh2.position.x = 2;
-    mesh3.position.x = -2;
-  }
   camera.aspect = sizes.width / sizes.height;
   camera.updateProjectionMatrix();
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
-
-let scrollY = window.scrollY;
-let currentSection = 0;
-window.addEventListener("scroll", () => {
-  scrollY = window.scrollY;
-
-  const newSection = Math.round(scrollY / (sizes.height * 1.2));
-  if (newSection != currentSection) {
-    currentSection = newSection;
-
-    if (currentSection === 1) {
-      gsap.to(mesh2.rotation, {
-        duration: 2,
-        ease: "power2.inOut",
-        y: "+=6",
-      });
-    } else {
-      gsap.to(sectionsMeshes[currentSection].rotation, {
-        duration: 2,
-        ease: "power2.inOut",
-        x: "+=6",
-        y: "+=3",
-        z: "+=6",
-      });
-    }
-  }
-});
-
-const cursor = {};
-cursor.x = 0;
-cursor.y = 0;
-
-window.addEventListener("mousemove", (e) => {
-  cursor.x = e.clientX / sizes.width - 0.5;
-  cursor.y = e.clientY / sizes.height - 0.5;
-});
-
-const renderer = new THREE.WebGLRenderer({
-  canvas,
-});
-
-renderer.setSize(sizes.width, sizes.height);
-renderer.render(scene, camera);
-
-const clock = new THREE.Clock();
-let prevTime = 0;
-
-const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
-  const deltaTime = elapsedTime - prevTime;
-  prevTime = elapsedTime;
-
-  camera.position.y = (-scrollY / sizes.height) * objectsDistance;
-  const parallaxX = cursor.x;
-  const parallaxY = -cursor.y;
-
-  // Camera Animation
-  cameraGroup.position.x +=
-    (parallaxX - cameraGroup.position.x) * 5 * deltaTime;
-  cameraGroup.position.y +=
-    (parallaxY - cameraGroup.position.y) * 5 * deltaTime;
-
-  for (const [index, mesh] of sectionsMeshes.entries()) {
-    if (index === 1) {
-      mesh.rotation.y += deltaTime * 0.12;
-    } else {
-      mesh.rotation.x += deltaTime * 0.1;
-      mesh.rotation.y += deltaTime * 0.12;
-    }
-  }
-
-  renderer.render(scene, camera);
-  window.requestAnimationFrame(tick);
-};
-tick();
