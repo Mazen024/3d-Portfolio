@@ -1,25 +1,84 @@
 @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cabin&display=swap");
+
 * {
   margin: 0;
   padding: 0;
-  font-family: "VT323", monospace;
+  box-sizing: border-box;
 }
 
-.webgl {
+body,
+html {
+  height: 100%;
+}
+
+canvas.webgl1 {
   position: fixed;
   top: 0;
   left: 0;
-  outline: none;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+canvas.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  display: none;
+}
+
+.intro {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  padding: 20px;
+  font-family: "Cabin", sans-serif;
+}
+
+.intro h1 {
+  font-size: 3rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.intro p {
+  font-size: 1.2rem;
+  color: #555;
+  max-width: 600px;
+  margin-bottom: 30px;
+}
+
+.intro button {
+  font-size: 1rem;
+  padding: 10px 20px;
+  color: #ffffff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.intro button:hover {
+  background-color: #0056b3;
 }
 
 .section {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  position: relative;
-  font-family: "Cabin", sans-serif;
-  color: #ffeded;
+  font-family: "VT323", monospace;
+  color: #ffffff;
   text-transform: uppercase;
   font-size: 7vmin;
   padding-left: 10%;
@@ -27,9 +86,30 @@
   gap: 50px;
 }
 
-/* section:nth-child(odd) {
-  justify-content: flex-end;
-} */
+.section img {
+  max-width: 200px;
+  height: auto;
+}
+
+.placeholder-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: brown;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 1000;
+}
+
+.placeholder-button:hover {
+  background-color: darkred;
+}
 
 @media only screen and (max-width: 600px) {
   img {
@@ -38,5 +118,15 @@
   .section {
     padding: 0;
     gap: 0;
+  }
+  .intro h1 {
+    font-size: 2.5rem;
+  }
+  .intro p {
+    font-size: 1rem;
+  }
+  .intro button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
   }
 }
